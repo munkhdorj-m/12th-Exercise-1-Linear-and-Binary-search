@@ -1,64 +1,139 @@
 import pytest
-from pathlib import Path
 
-# Assuming students will have functions like these in a file named student_code.py
-from assignment import write_numbers_to_file, sum_numbers_in_file, count_lines_words, find_longest_word_in_file
+from assignment import (
+    find_all_positions,
+    find_student_by_id,
+    binary_search_steps,
+    find_insert_position,
+    first_and_last_position,
+)
 
-# --- Exercise 1: Write numbers to a file ---
+
+class CountingList(list):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.accesses = 0
+
+    def __getitem__(self, index):
+        self.accesses += 1
+        return super().__getitem__(index)
+
+    def __iter__(self):
+        self.accesses += len(self)
+        return super().__iter__()
+
+    def __contains__(self, value):
+        self.accesses += len(self)
+        return super().__contains__(value)
+
+    def index(self, *args):
+        self.accesses += len(self)
+        return super().index(*args)
+
+    def count(self, value):
+        self.accesses += len(self)
+        return super().count(value)
+
+
 @pytest.mark.parametrize(
-    "numbers, expected_content",
+    "data, target, expected",
     [
-        ([10, 20, 30], "10\n20\n30\n"),
-        ([1, 2, 3, 4, 5], "1\n2\n3\n4\n5\n"),
+        ([4, 2, 4, 9, 4], 4, [0, 2, 4]),
+        ([10, 20, 30], 20, [1]),
+        ([10, 20, 30], 99, []),
+        ([], 1, []),
+        (["a", "b", "a", "c"], "a", [0, 2]),
+        ([7, 7, 7, 7], 7, [0, 1, 2, 3]),
     ]
 )
-def test1(tmp_path, numbers, expected_content):
-    file_path = tmp_path / "numbers.txt"
-    # Call student function
-    write_numbers_to_file(numbers, file_path)
-    # Check file content
-    assert file_path.read_text() == expected_content
+def test1(data, target, expected):
+    assert find_all_positions(data, target) == expected
+
+RECORDS = [
+    (101, "Bat", 78),
+    (205, "Saraa", 91),
+    (144, "Tuguldur", 65),
+    (317, "Anu", 88),
+]
 
 
-# --- Exercise 2: Sum numbers in a file ---
 @pytest.mark.parametrize(
-    "file_content, expected_sum",
+    "records, student_id, expected",
     [
-        ("10\n20\n30\n", 60),
-        ("1\n2\n3\n4\n5\n", 15),
+        (RECORDS, 101, "Bat"),
+        (RECORDS, 317, "Anu"),
+        (RECORDS, 144, "Tuguldur"),
+        (RECORDS, 999, None),
+        ([], 101, None),
     ]
 )
-def test2(tmp_path, file_content, expected_sum):
-    file_path = tmp_path / "numbers.txt"
-    file_path.write_text(file_content)
-    # Call student function
-    result = sum_numbers_in_file(file_path)
-    assert result == expected_sum
+def test2(records, student_id, expected):
+    assert find_student_by_id(records, student_id) == expected
 
 
-# --- Exercise 3: Count lines and words in a text file ---
 @pytest.mark.parametrize(
-    "file_content, expected_lines, expected_words",
+    "data, target, expected",
     [
-        ("Python is fun.\nIt helps you learn programming.\nFile handling is important.\n", 3, 12),
-        ("Hello world\nPython programming\nFile exercises\n", 3, 6),
+        ([1, 3, 5, 7, 9, 11, 13, 15], 7, (3, 1)),
+        ([1, 3, 5, 7, 9, 11, 13, 15], 1, (0, 3)),
+        ([1, 3, 5, 7, 9, 11, 13, 15], 15, (7, 4)),
+        ([1, 3, 5, 7, 9, 11, 13, 15], 8, (-1, 3)),
+        ([5], 5, (0, 1)),
+        ([5], 2, (-1, 1)),
+        ([], 5, (-1, 0)),
     ]
 )
-def test3(tmp_path, file_content, expected_lines, expected_words):
-    file_path = tmp_path / "data.txt"
-    file_path.write_text(file_content)
-    lines, words = count_lines_words(file_path)
-    assert lines == expected_lines
-    assert words == expected_words
+def test3(data, target, expected):
+    assert binary_search_steps(data, target) == expected
 
 
-@pytest.mark.parametrize("filename, content, expected_word", [
-    ("test_longest.txt", "Find the longest word in this file.", "longest"),
-    ("test_longest2.txt", "Short words only.", "Short"),
-    ("empty.txt", "", "")
-])
-def test4(filename, content, expected_word):
-    with open(filename, "w") as f:
-        f.write(content)
-    
-    assert find_longest_word_in_file(filename) == expected_word
+@pytest.mark.parametrize(
+    "data, value, expected",
+    [
+        ([10, 20, 30, 40], 25, 2),
+        ([10, 20, 30, 40], 10, 0),
+        ([10, 20, 30, 40], 40, 3),
+        ([10, 20, 30, 40], 50, 4),
+        ([10, 20, 30, 40], 5, 0),
+        ([1, 2, 2, 2, 3], 2, 1),
+        ([], 7, 0),
+    ]
+)
+def test4(data, value, expected):
+    assert find_insert_position(data, value) == expected
+
+
+def test4_efficiency():
+    data = CountingList(range(0, 200000, 2))
+    assert find_insert_position(data, 123457) == 61729
+    checked = data.accesses
+    assert checked < 200, (
+        "Too many elements checked (%d). Exercise 4 must use binary search."
+        % checked
+    )
+
+
+@pytest.mark.parametrize(
+    "data, target, expected",
+    [
+        ([1, 2, 2, 2, 3, 4], 2, (1, 3)),
+        ([5, 5, 5, 5], 5, (0, 3)),
+        ([1, 2, 3, 4], 4, (3, 3)),
+        ([1, 2, 3, 4], 1, (0, 0)),
+        ([1, 2, 3], 4, (-1, -1)),
+        ([1, 3, 5], 4, (-1, -1)),
+        ([], 1, (-1, -1)),
+    ]
+)
+def test5(data, target, expected):
+    assert first_and_last_position(data, target) == expected
+
+
+def test5_efficiency():
+    data = CountingList([1] * 50000 + [2] * 50000)
+    assert first_and_last_position(data, 2) == (50000, 99999)
+    checked = data.accesses
+    assert checked < 200, (
+        "Too many elements checked (%d). Exercise 5 must use binary search."
+        % checked
+    )
