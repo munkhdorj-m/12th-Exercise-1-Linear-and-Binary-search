@@ -1,7 +1,7 @@
 # Linear Search and Binary Search
 
-PDF:
-<!-- paste your slides/notes link here -->
+
+PDF: https://drive.google.com/file/d/14bB72Mvr2QaOCf2f6r3CLbhEHWTM7GuC/view?usp=sharing
 
 **Rules for this assignment**
 
@@ -9,13 +9,13 @@ PDF:
 - Exercises 1 and 2 use **linear search**.
 - Exercises 3, 4 and 5 use **binary search**. The input list is already sorted.
 - Exercises 4 and 5 are also tested for **speed** — a linear scan will fail those tests even if the answer is correct.
+- When an exercise returns two values, return them **in a list**, like `[3, 1]`.
 
 ---
 
 ## Exercise 1
 
 **Problem:**
-
 Search the list and return a list of **every** index where `target` appears, in order.
 Return an empty list if the target is not in the list.
 
@@ -41,7 +41,7 @@ Return an empty list if the target is not in the list.
 
 **Problem:**
 
-`records` is a list of student records. Each record is a tuple `(id, name, score)`.
+`records` is a list of student records. Each record is a list `[id, name, score]`.
 The list is **not sorted**, so you must use linear search.
 Return the **name** of the student with that id, or `None` if no student has it.
 
@@ -49,10 +49,10 @@ Return the **name** of the student with that id, or `None` if no student has it.
 
     Example Input:
         records = [
-            (101, "Bat", 78),
-            (205, "Saraa", 91),
-            (144, "Tuguldur", 65),
-            (317, "Anu", 88),
+            [101, "Bat", 78],
+            [205, "Saraa", 91],
+            [144, "Tuguldur", 65],
+            [317, "Anu", 88],
         ]
         student_id = 144
 
@@ -71,25 +71,10 @@ Return the **name** of the student with that id, or `None` if no student has it.
 
 **Problem:**
 
-`data` is a **sorted** list. Do a binary search and return a tuple `(index, steps)`:
+`data` is a **sorted** list. Do a binary search and return a list `[index, steps]`:
 
 - `index` — the index where `target` was found, or `-1` if it is not there.
 - `steps` — how many times you looked at a middle element.
-
-So that everyone gets the same `steps` count, use exactly this algorithm:
-
-    low  = 0
-    high = length of data - 1
-    steps = 0
-
-    while low <= high:
-        steps = steps + 1
-        mid = (low + high) // 2
-        if data[mid] == target:  -> return (mid, steps)
-        if data[mid] <  target:  -> low  = mid + 1
-        else:                    -> high = mid - 1
-
-    return (-1, steps)
 
 **Example:**
 
@@ -98,27 +83,29 @@ So that everyone gets the same `steps` count, use exactly this algorithm:
         target = 7
 
     Program Output:
-        (3, 1)      # found immediately at the middle
+        [3, 1]      # found immediately at the middle
 
     Example Input:
         data   = [1, 3, 5, 7, 9, 11, 13, 15]
         target = 15
 
     Program Output:
-        (7, 4)
+        [7, 4]
 
     Example Input:
         data   = [1, 3, 5, 7, 9, 11, 13, 15]
         target = 8
 
     Program Output:
-        (-1, 3)     # not found, but it still took 3 steps to prove it
+        [-1, 3]     # not found, but it still took 3 steps to prove it
 
 ---
 
 ## Exercise 4
 
 **Problem:**
+
+`find_insert_position(data, value)`
 
 `data` is a **sorted** list. Return the index where `value` should be inserted so the
 list stays sorted. If `value` is already in the list, return the position of the
@@ -155,10 +142,11 @@ The answer is always between `0` and `len(data)`.
 
 **Problem:**
 
+`first_and_last_position(data, target)`
 
 `data` is a **sorted** list that may contain repeated values.
-Return a tuple `(first, last)` — the index of the first and the last occurrence of
-`target`. Return `(-1, -1)` if the target is not in the list.
+Return a list `[first, last]` — the index of the first and the last occurrence of
+`target`. Return `[-1, -1]` if the target is not in the list.
 
 Hint: run binary search twice — once looking for the leftmost match, once for the rightmost.
 
@@ -169,21 +157,21 @@ Hint: run binary search twice — once looking for the leftmost match, once for 
         target = 2
 
     Program Output:
-        (1, 3)
+        [1, 3]
 
     Example Input:
         data   = [5, 5, 5, 5]
         target = 5
 
     Program Output:
-        (0, 3)
+        [0, 3]
 
     Example Input:
         data   = [1, 2, 3]
         target = 4
 
     Program Output:
-        (-1, -1)
+        [-1, -1]
 
 ---
 
