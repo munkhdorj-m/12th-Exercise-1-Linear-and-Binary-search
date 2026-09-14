@@ -1,7 +1,14 @@
-# Python Review 4 
+# Python Review 5
 
-Python File handling
-https://drive.google.com/file/d/1sIv9rb6PizW9sfts9eVu0BkLYWLjysiT/view
+Linear Search and Binary Search
+<!-- paste your slides/notes link here -->
+
+**Rules for this assignment**
+
+- Write every search yourself. Do **not** use `in`, `.index()`, `.count()`, `list.sort()`, or the `bisect` module.
+- Exercises 1 and 2 use **linear search**.
+- Exercises 3, 4 and 5 use **binary search**. The input list is already sorted.
+- Exercises 4 and 5 are also tested for **speed** — a linear scan will fail those tests even if the answer is correct.
 
 ---
 
@@ -9,20 +16,24 @@ https://drive.google.com/file/d/1sIv9rb6PizW9sfts9eVu0BkLYWLjysiT/view
 
 **Problem:**
 
-Input n numbers as list and write each number to a file called numbers.txt, one number per line.
+Search the list and return a list of **every** index where `target` appears, in order.
+Return an empty list if the target is not in the list.
 
 **Example:**
 
     Example Input:
-        [10,20,30,40,50]
-    
-    File Output (numbers.txt):
-        10
-        20
-        30
-        40
-        50
+        data   = [4, 2, 4, 9, 4]
+        target = 4
 
+    Program Output:
+        [0, 2, 4]
+
+    Example Input:
+        data   = [10, 20, 30]
+        target = 99
+
+    Program Output:
+        []
 
 ---
 
@@ -30,20 +41,29 @@ Input n numbers as list and write each number to a file called numbers.txt, one 
 
 **Problem:**
 
-Read numbers from the file numbers.txt.
-Calculate and print the sum of all numbers.
+`records` is a list of student records. Each record is a tuple `(id, name, score)`.
+The list is **not sorted**, so you must use linear search.
+Return the **name** of the student with that id, or `None` if no student has it.
 
 **Example:**
 
-    Example File Content (numbers.txt):
-        10
-        20
-        30
-        40
-        50
-    
+    Example Input:
+        records = [
+            (101, "Bat", 78),
+            (205, "Saraa", 91),
+            (144, "Tuguldur", 65),
+            (317, "Anu", 88),
+        ]
+        student_id = 144
+
     Program Output:
-        150
+        "Tuguldur"
+
+    Example Input:
+        student_id = 999
+
+    Program Output:
+        None
 
 ---
 
@@ -51,18 +71,48 @@ Calculate and print the sum of all numbers.
 
 **Problem:**
 
-Create a text file data.txt with some text.
-Count and return the number of lines and the total number of words in the file.
+`data` is a **sorted** list. Do a binary search and return a tuple `(index, steps)`:
 
-**Example**
+- `index` — the index where `target` was found, or `-1` if it is not there.
+- `steps` — how many times you looked at a middle element.
 
-    Example File Content (data.txt):
-        Python is fun.
-        It helps you learn programming.
-        File handling is important.
+So that everyone gets the same `steps` count, use exactly this algorithm:
+
+    low  = 0
+    high = length of data - 1
+    steps = 0
+
+    while low <= high:
+        steps = steps + 1
+        mid = (low + high) // 2
+        if data[mid] == target:  -> return (mid, steps)
+        if data[mid] <  target:  -> low  = mid + 1
+        else:                    -> high = mid - 1
+
+    return (-1, steps)
+
+**Example:**
+
+    Example Input:
+        data   = [1, 3, 5, 7, 9, 11, 13, 15]
+        target = 7
 
     Program Output:
-        3,12   # lines = 3 words = 12
+        (3, 1)      # found immediately at the middle
+
+    Example Input:
+        data   = [1, 3, 5, 7, 9, 11, 13, 15]
+        target = 15
+
+    Program Output:
+        (7, 4)
+
+    Example Input:
+        data   = [1, 3, 5, 7, 9, 11, 13, 15]
+        target = 8
+
+    Program Output:
+        (-1, 3)     # not found, but it still took 3 steps to prove it
 
 ---
 
@@ -70,61 +120,104 @@ Count and return the number of lines and the total number of words in the file.
 
 **Problem:**
 
-Write a program that reads a file and returns the longest word.
+`data` is a **sorted** list. Return the index where `value` should be inserted so the
+list stays sorted. If `value` is already in the list, return the position of the
+**first** (leftmost) copy.
 
-**Example**
+The answer is always between `0` and `len(data)`.
 
-    Example File Content (data.txt):
-        What's the longest word in here?
-    
+**Example:**
+
+    Example Input:
+        data  = [10, 20, 30, 40]
+        value = 25
+
     Program Output:
-         "longest"
+        2           # [10, 20, 25, 30, 40]
 
-    
+    Example Input:
+        data  = [10, 20, 30, 40]
+        value = 50
+
+    Program Output:
+        4           # goes on the end
+
+    Example Input:
+        data  = [1, 2, 2, 2, 3]
+        value = 2
+
+    Program Output:
+        1           # leftmost 2
+
 ---
 
-## Exercise 5 (Optional)
+## Exercise 5
 
 **Problem:**
 
-Word Guessing Game (like Hangman)
 
--Store a list of words in a file called words.txt.
--The program randomly picks a word from the file.
--The user guesses letters until they find the word (limit wrong guesses to 6).
--Save the game result (win or lose) to results.txt.
+`data` is a **sorted** list that may contain repeated values.
+Return a tuple `(first, last)` — the index of the first and the last occurrence of
+`target`. Return `(-1, -1)` if the target is not in the list.
 
-**Example**
+Hint: run binary search twice — once looking for the leftmost match, once for the rightmost.
 
-    Example 1:
-    Word Guessing Game!
-    The word has 7 letters: _ _ _ _ _ _
-    
-    Guess a letter: y
-    Good guess! _ y _ _ _ _
-    
-    Guess a letter: e
-    Wrong guess! 5 tries left.
-    
-    Guess a letter: p
-    Good guess! p y _ _ _ _ 
-    
-    ...
-    
-    Congratulations! You guessed the word: "python"
-    Game result saved to results.txt
+**Example:**
 
-    Example 2:
-    Word Guessing Game!
-    The word has 6 letters: _ _ _ _ _ _
-    
-    Guess a letter: z
-    Wrong guess! 5 tries left.
-    
-    ...
-    
-    Sorry, you lost! The word was: "school"
-    Game result saved to results.txt
+    Example Input:
+        data   = [1, 2, 2, 2, 3, 4]
+        target = 2
+
+    Program Output:
+        (1, 3)
+
+    Example Input:
+        data   = [5, 5, 5, 5]
+        target = 5
+
+    Program Output:
+        (0, 3)
+
+    Example Input:
+        data   = [1, 2, 3]
+        target = 4
+
+    Program Output:
+        (-1, -1)
 
 ---
 
+## Exercise 6 (Optional)
+
+**Problem:**
+
+Number Guessing Game — but the **computer** guesses.
+
+- You think of a secret number from 1 to 1000. Do not tell the program.
+- The program guesses a number. You answer `h` (too high), `l` (too low) or `c` (correct).
+- The program must use binary search, so it always wins in at most 10 guesses.
+- If your answers are contradictory (no number is left to guess), the program must say you cheated.
+- Save each game to `guess_log.txt`: the secret number found, and how many guesses it took.
+
+**Example**
+
+    I will guess your number between 1 and 1000!
+    Answer with h (too high), l (too low) or c (correct).
+
+    Guess 1: Is it 500? l
+    Guess 2: Is it 750? h
+    Guess 3: Is it 625? l
+    ...
+    Guess 9: Is it 673? c
+
+    Got it in 9 guesses!
+    Result saved to guess_log.txt
+
+    Example 2:
+    Guess 1: Is it 500? h
+    Guess 2: Is it 250? l
+    Guess 3: Is it 375? h
+    ...
+    You are cheating! No number fits your answers.
+
+---
