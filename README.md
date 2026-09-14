@@ -1,6 +1,6 @@
-# Python Review 5
+# Linear Search and Binary Search
 
-Linear Search and Binary Search
+PDF:
 <!-- paste your slides/notes link here -->
 
 **Rules for this assignment**
