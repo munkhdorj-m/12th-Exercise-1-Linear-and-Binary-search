@@ -105,8 +105,6 @@ Return the **name** of the student with that id, or `None` if no student has it.
 
 **Problem:**
 
-`find_insert_position(data, value)`
-
 `data` is a **sorted** list. Return the index where `value` should be inserted so the
 list stays sorted. If `value` is already in the list, return the position of the
 **first** (leftmost) copy.
@@ -141,8 +139,6 @@ The answer is always between `0` and `len(data)`.
 ## Exercise 5
 
 **Problem:**
-
-`first_and_last_position(data, target)`
 
 `data` is a **sorted** list that may contain repeated values.
 Return a list `[first, last]` — the index of the first and the last occurrence of
