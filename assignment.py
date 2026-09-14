@@ -1,22 +1,26 @@
-# You can remove 'pass' if you written code in the function 
+# You can remove 'pass' if you written code in the function
 # Exercise 1
 
-def write_numbers_to_file(numbers, filename):
+def find_all_positions(data, target):
     # Write your code here
     pass
 
 # Exercise 2
-def sum_numbers_in_file(filename):
+def find_student_by_id(records, student_id):
     # Write your code here
     pass
 
 # Exercise 3
-def count_lines_words(filename):
+def binary_search_steps(data, target):
     # Write your code here
     pass
 
 # Exercise 4
-def find_longest_word_in_file(filename):
+def find_insert_position(data, value):
     # Write your code here
     pass
 
+# Exercise 5
+def first_and_last_position(data, target):
+    # Write your code here
+    pass
